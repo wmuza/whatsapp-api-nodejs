@@ -254,7 +254,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{baseUrl}}/message/text?key=bot",
+							"raw": "{{baseUrl}}/message/text?key={{instance_key}}",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -265,7 +265,7 @@
 							"query": [
 								{
 									"key": "key",
-									"value": "bot",
+									"value": "{{instance_key}}",
 									"description": "Instance Key\n(Required)"
 								}
 							]
@@ -911,7 +911,7 @@
 				{
 					"name": "Create Group",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"url": {
 							"raw": "{{baseUrl}}/group/create?key={{instance_key}}",
