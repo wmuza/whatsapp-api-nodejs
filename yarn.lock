@@ -894,24 +894,26 @@
     "@wasm-audio-decoders/common" "9.0.5"
     codec-parser "2.4.3"
 
-"@whiskeysockets/baileys@6.6.0":
-  version "6.6.0"
-  resolved "https://registry.yarnpkg.com/@whiskeysockets/baileys/-/baileys-6.6.0.tgz#072925bd0d948b6b2bc50a630043c0bd51352651"
-  integrity sha512-4aIPHztdLZP24Qac7mudZTMR7qIsEDQxlpCBJE4atYHFAa5tlwCGPcUy249q3aaayxYtQAwheVG42L6AkRxAwg==
+"@whiskeysockets/baileys@^6.7.5":
+  version "6.7.7"
+  resolved "https://registry.yarnpkg.com/@whiskeysockets/baileys/-/baileys-6.7.7.tgz#ce8bb569e5eb88308bde3081b31757652166c4a5"
+  integrity sha512-QWF+D/+bxGvh5xvFJUOXeZ0UTgbm6LEUVXeHtDHYL8wCeK2ND5qnbGrOEFC7LJzhnOhaJZA/N0v3SutpH7zKYw==
   dependencies:
     "@adiwajshing/keyed-db" "^0.2.4"
     "@hapi/boom" "^9.1.3"
+    async-lock "^1.4.1"
     audio-decode "^2.1.3"
-    axios "^1.3.3"
+    axios "^1.6.0"
     cache-manager "4.0.1"
     futoin-hkdf "^1.5.1"
     libphonenumber-js "^1.10.20"
-    libsignal "github:adiwajshing/libsignal-node"
+    libsignal "github:WhiskeySockets/libsignal-node"
+    lodash "^4.17.21"
     music-metadata "^7.12.3"
     node-cache "^5.1.2"
     pino "^7.0.0"
     protobufjs "^7.2.4"
-    uuid "^9.0.0"
+    uuid "^10.0.0"
     ws "^8.13.0"
 
 abbrev@1:
@@ -1029,6 +1031,11 @@ astral-regex@^2.0.0:
   resolved "https://registry.yarnpkg.com/astral-regex/-/astral-regex-2.0.0.tgz#483143c567aeed4785759c0865786dc77d7d2e31"
   integrity sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==
 
+async-lock@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/async-lock/-/async-lock-1.4.1.tgz#56b8718915a9b68b10fce2f2a9a3dddf765ef53f"
+  integrity sha512-Az2ZTpuytrtqENulXwO3GGv1Bztugx6TT37NIo7imr/Qo0gsYiGtSdBa2B6fsXhTpVZDNfu1Qn3pk531e3q+nQ==
+
 async@3.2.3:
   version "3.2.3"
   resolved "https://registry.yarnpkg.com/async/-/async-3.2.3.tgz#ac53dafd3f4720ee9e8a160628f18ea91df196c9"
@@ -1082,14 +1089,36 @@ axios@^1.1.3:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
-axios@^1.3.3:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.4.0.tgz#38a7bf1224cd308de271146038b551d725f0be1f"
-  integrity sha512-S4XCWMEmzvo64T9GfvQDOXgYRDJ/wsSZc7Jvdgx5u1sd0JwsuPLqb3SYmusag+edF6ziyMensPVqLTSc1PiSEA==
+axios@^1.6.0:
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.5.tgz#21eed340eb5daf47d29b6e002424b3e88c8c54b1"
+  integrity sha512-fZu86yCo+svH3uqJ/yTdQ0QHpQu5oL+/QE+QPSv6BZSkDAoky9vytxp7u5qk83OJFS3kEBcesWni9WTZAv3tSw==
   dependencies:
-    follow-redirects "^1.15.0"
+    follow-redirects "^1.15.6"
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
+
+baileys@^6.7.7:
+  version "6.7.7"
+  resolved "https://registry.yarnpkg.com/baileys/-/baileys-6.7.7.tgz#80ab13566280ca39db5bd51d31e484161ffd7ebe"
+  integrity sha512-5UPCiGSmTzJgXRhPVTbxHdWmUgjbISjbNg2pefAbJZEZ9kQVAbAbYcq47Uj1oSQXVPTTIOm+FujOtMjIy03Cbg==
+  dependencies:
+    "@adiwajshing/keyed-db" "^0.2.4"
+    "@hapi/boom" "^9.1.3"
+    async-lock "^1.4.1"
+    audio-decode "^2.1.3"
+    axios "^1.6.0"
+    cache-manager "4.0.1"
+    futoin-hkdf "^1.5.1"
+    libphonenumber-js "^1.10.20"
+    libsignal "github:WhiskeySockets/libsignal-node"
+    lodash "^4.17.21"
+    music-metadata "^7.12.3"
+    node-cache "^5.1.2"
+    pino "^7.0.0"
+    protobufjs "^7.2.4"
+    uuid "^10.0.0"
+    ws "^8.13.0"
 
 balanced-match@^1.0.0:
   version "1.0.2"
@@ -1986,6 +2015,11 @@ follow-redirects@^1.15.0:
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
   integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
 
+follow-redirects@^1.15.6:
+  version "1.15.6"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.6.tgz#7f815c0cda4249c74ff09e95ef97c23b5fd0399b"
+  integrity sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==
+
 form-data@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.0.tgz#93919daeaf361ee529584b9b31664dc12c9fa452"
@@ -2364,9 +2398,9 @@ libphonenumber-js@^1.10.20:
   resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.10.61.tgz#efd350a6283e5d6a804f0cd17dae1f563410241d"
   integrity sha512-TsQsyzDttDvvzWNkbp/i0fVbzTGJIG0mUu/uNalIaRQEYeJxVQ/FPg+EJgSqfSXezREjM0V3RZ8cLVsKYhhw0Q==
 
-"libsignal@github:adiwajshing/libsignal-node":
+"libsignal@github:WhiskeySockets/libsignal-node":
   version "2.0.1"
-  resolved "https://codeload.github.com/adiwajshing/libsignal-node/tar.gz/11dbd962ea108187c79a7c46fe4d6f790e23da97"
+  resolved "https://codeload.github.com/WhiskeySockets/libsignal-node/tar.gz/83a3e3a3864511cb74df1b796373f0d49d071134"
   dependencies:
     curve25519-js "^0.0.4"
     protobufjs "6.8.8"
@@ -2442,6 +2476,11 @@ lodash.merge@^4.6.2:
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
   integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
+
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 log-symbols@4.1.0:
   version "4.1.0"
@@ -3918,6 +3957,11 @@ utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==
+
+uuid@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-10.0.0.tgz#5a95aa454e6e002725c79055fd42aaba30ca6294"
+  integrity sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==
 
 uuid@^8.3.2:
   version "8.3.2"
