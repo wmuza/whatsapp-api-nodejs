@@ -1177,7 +1177,7 @@ axios@^1.6.0:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
-baileys@^6.7.9:
+baileys@^6.7.8:
   version "6.7.9"
   resolved "https://registry.yarnpkg.com/baileys/-/baileys-6.7.9.tgz#33aeb3eb76a73a080b67431461fd8c65c3a0b5c7"
   integrity sha512-GMfWskrKVIaVD/HnTvhCz1CLMOQ0UMiabELSkDWSvGf67eTHyQtdmWmxvb71WMCMR1EZb8IwE7GHGzFBhVXAig==
