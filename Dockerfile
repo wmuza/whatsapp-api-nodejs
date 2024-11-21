@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:22-alpine
 
 ARG _WORKDIR=/home/node/app
 ARG PORT=3333
