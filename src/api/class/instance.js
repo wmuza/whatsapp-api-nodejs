@@ -4,7 +4,7 @@ const pino = require('pino')
 const {
     default: makeWASocket,
     DisconnectReason,
-} = require('@whiskeysockets/baileys')
+} = require('baileys')
 const { unlinkSync } = require('fs')
 const { v4: uuidv4 } = require('uuid')
 const path = require('path')
