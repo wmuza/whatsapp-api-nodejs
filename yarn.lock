@@ -1177,10 +1177,10 @@ axios@^1.6.0:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
-baileys@^6.7.12:
-  version "6.7.12"
-  resolved "https://registry.yarnpkg.com/baileys/-/baileys-6.7.12.tgz#7f3ab78629574c61b7a7ce9578c0d39234584393"
-  integrity sha512-9vFmfJ4jDaheNtZdN76B+gEIsNtXrBg/+UEIaNcmsrRCSjugCRunffmw2uUm/ybTEUQfsitis9EGtSpnhOJYNQ==
+baileys@^6.7.13:
+  version "6.7.13"
+  resolved "https://registry.yarnpkg.com/baileys/-/baileys-6.7.13.tgz#314a78c18a92682c454964ef9fc22325f6280513"
+  integrity sha512-07Ud5oTxJLwCQzTj2WQrWnuBdxQ30d0raFoGRAfQg7E2FjaF4tWsdn1tzS2kcZp1UvYtto8nmF4NFkGo30bblA==
   dependencies:
     "@adiwajshing/keyed-db" "^0.2.4"
     "@hapi/boom" "^9.1.3"
