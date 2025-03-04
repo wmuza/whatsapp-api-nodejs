@@ -1193,10 +1193,10 @@ axios@^1.6.0:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
-baileys@^6.7.15:
-  version "6.7.15"
-  resolved "https://registry.yarnpkg.com/baileys/-/baileys-6.7.15.tgz#69b5226b35092b3ad05329b5c5a5e714cf0911f0"
-  integrity sha512-/8E2YkN6D8cR7sCs6ucpLWOeP6Omt/moO9qtrs4ZavDCoyuktqwOYPeVJfP9cHWF1G+waZBzR289359NqhDNNg==
+baileys@6.7.16:
+  version "6.7.16"
+  resolved "https://registry.yarnpkg.com/baileys/-/baileys-6.7.16.tgz#70e59bd27628acf48423150248cf1bfc24fdcaf0"
+  integrity sha512-hyWdrtEd9iy9Z/i57HdmYB+Ao5VZhQxKvGP5pcKEuUh1I/m8cwqgaIUYhoqV9jJeWrWn1sZsyFb2jS/rzSMAMw==
   dependencies:
     "@adiwajshing/keyed-db" "^0.2.4"
     "@cacheable/node-cache" "^1.4.0"

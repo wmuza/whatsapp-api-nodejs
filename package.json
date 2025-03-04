@@ -34,7 +34,7 @@
     "dependencies": {
         "@adiwajshing/keyed-db": "^0.2.4",
         "axios": "^1.1.3",
-        "baileys": "^6.7.15",
+        "baileys": "6.7.16",
         "dotenv": "^16.0.3",
         "ejs": "^3.1.7",
         "express": "^4.18.2",
