@@ -1,10 +1,13 @@
 /* eslint-disable no-unsafe-optional-chaining */
 const QRCode = require('qrcode')
+const qrcodeTerminal = require('qrcode-terminal')
 const pino = require('pino')
 const {
     default: makeWASocket,
     DisconnectReason,
-} = require('baileys')
+    fetchLatestBaileysVersion,
+    useMultiFileAuthState,
+} = require('@whiskeysockets/baileys')
 const { unlinkSync } = require('fs')
 const { v4: uuidv4 } = require('uuid')
 const path = require('path')
@@ -15,7 +18,7 @@ const axios = require('axios')
 const config = require('../../config/config')
 const downloadMessage = require('../helper/downloadMsg')
 const logger = require('pino')()
-const useMongoDBAuthState = require('../helper/mongoAuthState')
+const useMongooseAuthState = require('../helper/mongooseAuthState')
 
 class WhatsAppInstance {
     socketConfig = {
@@ -70,13 +73,33 @@ class WhatsAppInstance {
     }
 
     async init() {
-        this.collection = mongoClient.db('whatsapp-api').collection(this.key)
-        const { state, saveCreds } = await useMongoDBAuthState(this.collection)
+        logger.info(`[${this.key}] Initializing WhatsApp instance...`)
+
+        // Use Mongoose-based auth state (like whatsapp-api-local)
+        const { state, saveCreds } = await useMongooseAuthState(this.key)
         this.authState = { state: state, saveCreds: saveCreds }
+
+        // Fetch latest Baileys version for protocol compatibility
+        const { version, isLatest } = await fetchLatestBaileysVersion()
+        logger.info(`[${this.key}] Using Baileys version: ${version.join('.')}, isLatest: ${isLatest}`)
+
+        // Configure socket with auth state and version
         this.socketConfig.auth = this.authState.state
+        this.socketConfig.version = version
         this.socketConfig.browser = Object.values(config.browser)
+        this.socketConfig.markOnlineOnConnect = true
+        this.socketConfig.generateHighQualityLinkPreview = true
+        this.socketConfig.syncFullHistory = false
+        this.socketConfig.getMessage = async (key) => {
+            return { conversation: 'Message not available' }
+        }
+
+        logger.info(`[${this.key}] Browser config: ${JSON.stringify(this.socketConfig.browser)}`)
+
+        // Create socket with updated config
         this.instance.sock = makeWASocket(this.socketConfig)
         this.setHandler()
+        logger.info(`[${this.key}] Socket created and handlers set`)
         return this
     }
 
@@ -99,9 +122,17 @@ class WhatsAppInstance {
                 ) {
                     await this.init()
                 } else {
-                    await this.collection.drop().then((r) => {
-                        logger.info('STATE: Droped collection')
-                    })
+                    // Delete all auth data for this session from MongoDB
+                    const mongoose = require('mongoose')
+                    const collectionName = `auth_${this.key}`
+                    try {
+                        if (mongoose.connection.db) {
+                            await mongoose.connection.db.dropCollection(collectionName)
+                            logger.info(`[${this.key}] STATE: Dropped collection ${collectionName}`)
+                        }
+                    } catch (err) {
+                        logger.warn(`[${this.key}] Could not drop collection: ${err.message}`)
+                    }
                     this.instance.online = false
                 }
 
@@ -149,17 +180,28 @@ class WhatsAppInstance {
             }
 
             if (qr) {
+                // Display QR code in terminal (like whatsapp-api-local)
+                console.log(`\n📱 QR CODE for session: ${this.key} (Attempt ${this.instance.qrRetry + 1}/${config.instance.maxRetryQr})`)
+                console.log('Scan this QR code with WhatsApp:')
+                qrcodeTerminal.generate(qr, { small: true })
+                console.log('Waiting for QR scan...\n')
+
+                // Also generate base64 for web display
                 QRCode.toDataURL(qr).then((url) => {
                     this.instance.qr = url
                     this.instance.qrRetry++
+                    logger.info(`[${this.key}] QR code generated successfully (attempt ${this.instance.qrRetry}/${config.instance.maxRetryQr})`)
+
                     if (this.instance.qrRetry >= config.instance.maxRetryQr) {
                         // close WebSocket connection
                         this.instance.sock.ws.close()
                         // remove all events
                         this.instance.sock.ev.removeAllListeners()
                         this.instance.qr = ' '
-                        logger.info('socket connection terminated')
+                        logger.info(`[${this.key}] Max QR retries reached - socket connection terminated`)
                     }
+                }).catch((err) => {
+                    logger.error(`[${this.key}] QR code generation failed:`, err)
                 })
             }
         })

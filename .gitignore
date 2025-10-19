@@ -10,3 +10,4 @@ sessiondata
 # IDEs
 .vscode/settings.json
 .idea
+.claude/settings.local.json
