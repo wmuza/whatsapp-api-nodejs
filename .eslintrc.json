@@ -16,6 +16,7 @@
     },
     "globals": {
         "WhatsAppInstances": true,
+        "mongoClient": true,
         "describe": true,
         "it": true
     }

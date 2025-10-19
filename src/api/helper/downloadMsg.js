@@ -8,6 +8,7 @@ module.exports = async function downloadMessage(msg, msgType) {
             buffer = Buffer.concat([buffer, chunk])
         }
     } catch {
+        // eslint-disable-next-line no-console
         return console.log('error downloading file-message')
     }
     return buffer.toString('base64')

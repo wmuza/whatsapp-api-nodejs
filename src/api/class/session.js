@@ -20,7 +20,7 @@ class Session {
                     logger.info(`Restoring session: ${session.sessionId}`)
 
                     const webhook = !config.webhookEnabled
-                        ? undefined
+                        ? null
                         : config.webhookEnabled
                     const webhookUrl = session.webhookUrl || config.webhookUrl
 

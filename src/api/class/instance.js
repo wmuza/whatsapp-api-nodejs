@@ -6,11 +6,8 @@ const {
     default: makeWASocket,
     DisconnectReason,
     fetchLatestBaileysVersion,
-    useMultiFileAuthState,
 } = require('@whiskeysockets/baileys')
-const { unlinkSync } = require('fs')
 const { v4: uuidv4 } = require('uuid')
-const path = require('path')
 const processButton = require('../helper/processbtn')
 const generateVC = require('../helper/genVc')
 const Chat = require('../models/chat.model')
@@ -23,7 +20,7 @@ const useMongooseAuthState = require('../helper/mongooseAuthState')
 
 class WhatsAppInstance {
     socketConfig = {
-        defaultQueryTimeoutMs: undefined,
+        defaultQueryTimeoutMs: null,
         printQRInTerminal: false,
         logger: pino({
             level: config.log.level,
@@ -31,8 +28,8 @@ class WhatsAppInstance {
     }
     key = ''
     authState
-    allowWebhook = undefined
-    webhook = undefined
+    allowWebhook = null
+    webhook = null
 
     instance = {
         key: this.key,
@@ -91,7 +88,7 @@ class WhatsAppInstance {
         this.socketConfig.markOnlineOnConnect = true
         this.socketConfig.generateHighQualityLinkPreview = true
         this.socketConfig.syncFullHistory = false
-        this.socketConfig.getMessage = async (key) => {
+        this.socketConfig.getMessage = async () => {
             return { conversation: 'Message not available' }
         }
 
@@ -227,9 +224,12 @@ class WhatsAppInstance {
 
             if (qr) {
                 // Display QR code in terminal (like whatsapp-api-local)
+                // eslint-disable-next-line no-console
                 console.log(`\n📱 QR CODE for session: ${this.key} (Attempt ${this.instance.qrRetry + 1}/${config.instance.maxRetryQr})`)
+                // eslint-disable-next-line no-console
                 console.log('Scan this QR code with WhatsApp:')
                 qrcodeTerminal.generate(qr, { small: true })
+                // eslint-disable-next-line no-console
                 console.log('Waiting for QR scan...\n')
 
                 // Also generate base64 for web display
@@ -393,7 +393,7 @@ class WhatsAppInstance {
             })
         })
 
-        sock?.ev.on('messages.update', async (messages) => {
+        sock?.ev.on('messages.update', async () => {
             //console.log('messages.update')
             //console.dir(messages);
         })
@@ -713,14 +713,11 @@ class WhatsAppInstance {
             let groups = await this.groupFetchAllParticipating()
             let Chats = await this.getChat()
             if (groups && Chats) {
-                for (const [key, value] of Object.entries(groups)) {
+                for (const value of Object.values(groups)) {
                     let group = Chats.find((c) => c.id === value.id)
                     if (group) {
                         let participants = []
-                        for (const [
-                            key_participant,
-                            participant,
-                        ] of Object.entries(value.participants)) {
+                        for (const participant of Object.values(value.participants)) {
                             participants.push(participant)
                         }
                         group.participant = participants
@@ -902,7 +899,7 @@ class WhatsAppInstance {
                 let chat = Chats.find((c) => c.id === newChat.id)
                 let is_owner = false
                 if (chat) {
-                    if (chat.participant == undefined) {
+                    if (!chat.participant) {
                         chat.participant = []
                     }
                     if (chat.participant && newChat.action == 'add') {

@@ -40,6 +40,7 @@ async function useMongooseAuthState(sessionId) {
                 { upsert: true, new: true }
             );
         } catch (error) {
+            // eslint-disable-next-line no-console
             console.error(`[${sessionId}] Error writing data:`, error);
             throw error;
         }
@@ -55,6 +56,7 @@ async function useMongooseAuthState(sessionId) {
             const data = JSON.stringify(doc.value);
             return JSON.parse(data, BufferJSON.reviver);
         } catch (error) {
+            // eslint-disable-next-line no-console
             console.error(`[${sessionId}] Error reading data:`, error);
             return null;
         }
@@ -65,6 +67,7 @@ async function useMongooseAuthState(sessionId) {
         try {
             await AuthModel.deleteOne({ _id: id });
         } catch (error) {
+            // eslint-disable-next-line no-console
             console.error(`[${sessionId}] Error removing data:`, error);
         }
     };
@@ -88,6 +91,7 @@ async function useMongooseAuthState(sessionId) {
                                 const value = await readData(`${type}-${id}`);
                                 data[id] = value;
                             } catch (error) {
+                                // eslint-disable-next-line no-console
                                 console.error(`[${sessionId}] Error getting ${type}-${id}:`, error);
                                 data[id] = null;
                             }

@@ -21,7 +21,7 @@ exports.getStatus = async (req, res) => {
 }
 
 exports.blockUser = async (req, res) => {
-    const data = await WhatsAppInstances[req.query.key]?.blockUnblock(
+    await WhatsAppInstances[req.query.key]?.blockUnblock(
         req.query.id,
         req.query.block_status
     )
