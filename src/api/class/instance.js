@@ -14,6 +14,7 @@ const path = require('path')
 const processButton = require('../helper/processbtn')
 const generateVC = require('../helper/genVc')
 const Chat = require('../models/chat.model')
+const SessionModel = require('../models/session.model')
 const axios = require('axios')
 const config = require('../../config/config')
 const downloadMessage = require('../helper/downloadMsg')
@@ -106,7 +107,23 @@ class WhatsAppInstance {
     setHandler() {
         const sock = this.instance.sock
         // on credentials update save state
-        sock?.ev.on('creds.update', this.authState.saveCreds)
+        sock?.ev.on('creds.update', async () => {
+            await this.authState.saveCreds()
+
+            // Update Session model to mark that credentials exist
+            if (config.mongoose.enabled) {
+                await SessionModel.findOneAndUpdate(
+                    { sessionId: this.key },
+                    {
+                        sessionId: this.key,
+                        hasCreds: true,
+                        updatedAt: new Date()
+                    },
+                    { upsert: true, new: true }
+                )
+                logger.info(`[${this.key}] Session metadata saved to MongoDB`)
+            }
+        })
 
         // on socket closed, opened, connecting
         sock?.ev.on('connection.update', async (update) => {
@@ -133,6 +150,13 @@ class WhatsAppInstance {
                     } catch (err) {
                         logger.warn(`[${this.key}] Could not drop collection: ${err.message}`)
                     }
+
+                    // Delete session metadata from MongoDB
+                    if (config.mongoose.enabled) {
+                        await SessionModel.findOneAndDelete({ sessionId: this.key })
+                        logger.info(`[${this.key}] Session metadata deleted from MongoDB`)
+                    }
+
                     this.instance.online = false
                 }
 
@@ -160,6 +184,28 @@ class WhatsAppInstance {
                         const saveChat = new Chat({ key: this.key })
                         await saveChat.save()
                     }
+
+                    // Save session metadata with user information
+                    const user = sock.user
+                    await SessionModel.findOneAndUpdate(
+                        { sessionId: this.key },
+                        {
+                            sessionId: this.key,
+                            hasCreds: true,
+                            status: 'connected',
+                            qrCode: null,
+                            user: user ? {
+                                id: user.id,
+                                name: user.name || user.verifiedName || 'Unknown',
+                                phone: user.id?.split('@')[0] || ''
+                            } : null,
+                            webhookUrl: this.webhookUrl,
+                            lastConnected: new Date(),
+                            updatedAt: new Date()
+                        },
+                        { upsert: true, new: true }
+                    )
+                    logger.info(`[${this.key}] Session connected and metadata saved`)
                 }
                 this.instance.online = true
                 if (
