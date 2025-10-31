@@ -9,9 +9,9 @@ RUN apk add git
 WORKDIR ${_WORKDIR}
 
 ADD . ${_WORKDIR}
-RUN yarn install
+RUN npm install
 
 USER node
 EXPOSE ${PORT}
 
-CMD yarn start
+CMD npm start
