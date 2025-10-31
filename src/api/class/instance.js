@@ -359,31 +359,35 @@ class WhatsAppInstance {
                 if (messageType === 'conversation') {
                     webhookData['text'] = m
                 }
-                if (config.webhookBase64) {
-                    switch (messageType) {
-                        case 'imageMessage':
-                            webhookData['msgContent'] = await downloadMessage(
-                                msg.message.imageMessage,
-                                'image'
-                            )
-                            break
-                        case 'videoMessage':
-                            webhookData['msgContent'] = await downloadMessage(
-                                msg.message.videoMessage,
-                                'video'
-                            )
-                            break
-                        case 'audioMessage':
-                            webhookData['msgContent'] = await downloadMessage(
-                                msg.message.audioMessage,
-                                'audio'
-                            )
-                            break
-                        default:
-                            webhookData['msgContent'] = ''
-                            break
+
+                // Always download media for messages that contain media
+                // This is required for the backend to process media properly
+                const mediaTypes = {
+                    'imageMessage': 'image',
+                    'videoMessage': 'video',
+                    'audioMessage': 'audio',
+                    'documentMessage': 'document'
+                }
+
+                if (mediaTypes[messageType]) {
+                    try {
+                        const mediaBuffer = await downloadMessage(
+                            msg.message[messageType],
+                            mediaTypes[messageType]
+                        )
+                        // Send media buffer for backend processing
+                        webhookData['mediaBuffer'] = mediaBuffer
+
+                        // Also keep msgContent for backward compatibility if webhookBase64 is enabled
+                        if (config.webhookBase64) {
+                            webhookData['msgContent'] = mediaBuffer
+                        }
+                    } catch (error) {
+                        logger.error(`[${this.key}] Failed to download ${messageType}: ${error.message}`)
+                        // Continue with webhook even if download fails
                     }
                 }
+
                 if (
                     ['all', 'messages', 'messages.upsert'].some((e) =>
                         config.webhookAllowedEvents.includes(e)
