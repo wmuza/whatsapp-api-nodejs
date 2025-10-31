@@ -44,6 +44,16 @@ const MARK_MESSAGES_READ = !!(
     process.env.MARK_MESSAGES_READ && process.env.MARK_MESSAGES_READ === 'true'
 )
 
+// Google Cloud Storage configuration
+const GCS_ENABLED = !!(
+    process.env.GCS_ENABLED && process.env.GCS_ENABLED === 'true'
+)
+const GCS_BUCKET_NAME = process.env.GCS_BUCKET_NAME || ''
+const GCS_PROJECT_ID = process.env.GCS_PROJECT_ID || ''
+const GCS_KEY_FILE = process.env.GCS_KEY_FILE || ''
+const GCS_CREDENTIALS = process.env.STORAGE_CREDENTIALS || process.env.GCS_CREDENTIALS || ''
+const GCS_PUBLIC_URL_BASE = process.env.GCS_PUBLIC_URL_BASE || ''
+
 module.exports = {
     port: PORT,
     token: TOKEN,
@@ -74,5 +84,13 @@ module.exports = {
     webhookBase64: WEBHOOK_BASE64,
     protectRoutes: PROTECT_ROUTES,
     markMessagesRead: MARK_MESSAGES_READ,
-    webhookAllowedEvents: WEBHOOK_ALLOWED_EVENTS
+    webhookAllowedEvents: WEBHOOK_ALLOWED_EVENTS,
+    gcs: {
+        enabled: GCS_ENABLED,
+        bucketName: GCS_BUCKET_NAME,
+        projectId: GCS_PROJECT_ID,
+        keyFile: GCS_KEY_FILE,
+        credentials: GCS_CREDENTIALS,
+        publicUrlBase: GCS_PUBLIC_URL_BASE
+    }
 }

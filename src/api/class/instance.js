@@ -15,6 +15,7 @@ const SessionModel = require('../models/session.model')
 const axios = require('axios')
 const config = require('../../config/config')
 const downloadMessage = require('../helper/downloadMsg')
+const uploadToGcs = require('../helper/uploadToGcs')
 const logger = require('pino')()
 const useMongooseAuthState = require('../helper/mongooseAuthState')
 
@@ -375,11 +376,30 @@ class WhatsAppInstance {
                             msg.message[messageType],
                             mediaTypes[messageType]
                         )
-                        // Send media buffer for backend processing
-                        webhookData['mediaBuffer'] = mediaBuffer
+
+                        // If GCS is enabled, upload to Google Cloud Storage and send URL
+                        if (config.gcs.enabled) {
+                            try {
+                                const mediaUrl = await uploadToGcs(
+                                    mediaBuffer,
+                                    mediaTypes[messageType],
+                                    this.key
+                                )
+                                // Send public URL instead of buffer
+                                webhookData['mediaUrl'] = mediaUrl
+                                logger.info(`[${this.key}] Media uploaded to GCS: ${mediaUrl}`)
+                            } catch (gcsError) {
+                                logger.error(`[${this.key}] Failed to upload to GCS: ${gcsError.message}`)
+                                // Fallback to sending buffer if GCS upload fails
+                                webhookData['mediaBuffer'] = mediaBuffer
+                            }
+                        } else {
+                            // Send media buffer for backend processing (backward compatibility)
+                            webhookData['mediaBuffer'] = mediaBuffer
+                        }
 
                         // Also keep msgContent for backward compatibility if webhookBase64 is enabled
-                        if (config.webhookBase64) {
+                        if (config.webhookBase64 && !config.gcs.enabled) {
                             webhookData['msgContent'] = mediaBuffer
                         }
                     } catch (error) {
