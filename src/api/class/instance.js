@@ -6,7 +6,7 @@ const {
     default: makeWASocket,
     DisconnectReason,
     fetchLatestBaileysVersion,
-} = require('@whiskeysockets/baileys')
+} = require('baileys')
 const { v4: uuidv4 } = require('uuid')
 const processButton = require('../helper/processbtn')
 const generateVC = require('../helper/genVc')

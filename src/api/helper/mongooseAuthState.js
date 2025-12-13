@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const { initAuthCreds } = require('@whiskeysockets/baileys');
-const { BufferJSON } = require('@whiskeysockets/baileys');
+const { initAuthCreds, BufferJSON } = require('baileys');
 
 // Create a dynamic Mongoose model for each session
 function createAuthModel(sessionId) {
