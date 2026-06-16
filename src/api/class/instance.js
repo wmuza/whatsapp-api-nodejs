@@ -545,12 +545,28 @@ class WhatsAppInstance {
     }
 
     getWhatsAppId(id) {
-        if (id.includes('@g.us') || id.includes('@s.whatsapp.net')) return id
+        // Pass through fully-qualified JIDs untouched: users (@s.whatsapp.net),
+        // groups (@g.us), channels/newsletters (@newsletter) and broadcast lists
+        // (@broadcast). Only bare numbers get a server suffix appended.
+        if (
+            id.includes('@g.us') ||
+            id.includes('@s.whatsapp.net') ||
+            id.includes('@newsletter') ||
+            id.includes('@broadcast')
+        )
+            return id
         return id.includes('-') ? `${id}@g.us` : `${id}@s.whatsapp.net`
     }
 
     async verifyId(id) {
-        if (id.includes('@g.us')) return true
+        // Groups, channels and broadcast targets aren't WhatsApp accounts, so
+        // skip the onWhatsApp() existence check for them.
+        if (
+            id.includes('@g.us') ||
+            id.includes('@newsletter') ||
+            id.includes('@broadcast')
+        )
+            return true
         const [result] = await this.instance.sock?.onWhatsApp(id)
         if (result?.exists) return true
         throw new Error('no account exists')
